@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Man.Dapr.Sidekick;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -10,6 +11,9 @@ namespace WeatherForecastService.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
+        private readonly IDaprSidecarHost _daprSidecarHost;
+
+
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -17,9 +21,10 @@ namespace WeatherForecastService.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IDaprSidecarHost daprSidecarHost)
         {
             _logger = logger;
+            _daprSidecarHost = daprSidecarHost;
         }
 
         [HttpGet]
@@ -34,5 +39,12 @@ namespace WeatherForecastService.Controllers
             })
             .ToArray();
         }
+
+        [HttpGet("DaprStatus")]
+        public ActionResult GetDaprStatus() => Ok(new
+        {
+            process = _daprSidecarHost.GetProcessInfo(),   // Information about the sidecar process such as if it is running
+            options = _daprSidecarHost.GetProcessOptions() // The sidecar options if running, including ports and locations
+        });
     }
 }
