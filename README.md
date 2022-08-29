@@ -17,7 +17,7 @@ When both sidecars are running use `client.http` to make a request to the proxy 
 
 See name resolution by changing the port from `http://localhost:3500` to `http://localhost:3501`, showing that calling any sidecar routes correctly the call.
 
-## Visual Studio 2019/2022
+## Visual Studio 2022
 ```
 <ItemGroup>
   <PackageReference Include="Man.Dapr.Sidekick.AspNetCore" Version="1.2.1" />
